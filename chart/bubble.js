@@ -29,65 +29,37 @@ export const BubbleParameter = {
   'yAxisName': { valueType: 'string', defaultValue: '', description: 'name of yAxis', },
 }
 
-export function createBubbleChartDataStructure(rows, key1Names, key2Names, selectors) {
+export function createBubbleChartDataStructure(rows, selectors) {
   const series = []
-
-  const xAxisValues = key1Names.map(kn => {
-    let x = null
-
-    try { x = parseFloat(kn) }
-    catch (error) { /** ignore parsing error, just pushing null */ }
-
-    return x
-  })
-
-  const yAxisValues = key2Names.map(kn => {
-    let y = null
-
-    try { y = parseFloat(kn) }
-    catch (error) { /** ignore parsing error, just pushing null */ }
-
-    return y
-  })
 
   for (let i = 0; i < selectors.length; i++) {
     const selector = selectors[i]
     const s = { name: selector, data: [], }
 
-    for (let x = 0; x < xAxisValues.length; x++) {
-      const xValue = xAxisValues[x]
+    const selectorRows = rows[i].value
+    for (let j = 0; j < selectorRows.length; j++) {
+      const r = selectorRows[j]
 
-      for (let y = 0; y < yAxisValues.length; y++) {
-        const yValue = yAxisValues[y]
+      try {
+        const xValue = (typeof r.key1 !== 'number') ? parseFloat(r.key1) : r.key1
+        const yValue = (typeof r.key2 !== 'number') ? parseFloat(r.key2) : r.key2
+        const zValue = (typeof r.aggregated !== 'number') ? parseFloat(r.aggregated) : r.aggregated
 
-        let zValue = null
-        try {
-          zValue = rows[i].value[x][y]
-        } catch (error) {
-          continue; // if zValue does not exist, continue
-        }
-
-        if (typeof zValue === 'undefined') {
-          continue;
-        }
-
-        try { zValue = parseFloat(zValue) }
-        catch (error) { zValue = null }
-
-        if (xValue !== null && yValue !== null && zValue !== null) {
-          s.data.push({ x: xValue, y: yValue, z: zValue, })
-        }
+        s.data.push({ x: xValue, y: yValue, z: zValue, })
+      } catch (error) {
+        /** ignore parsing error */
       }
     }
 
     series.push(s)
   }
 
+  console.log(series)
+
   return series
 }
 
-export function createBubbleChartOption(Highcharts, data, parameter,
-                                        key1Names, key2Names, selectors) {
+export function createBubbleChartOption(Highcharts, data, parameter) {
   const {
     xAxisName, yAxisName, xAxisUnit, yAxisUnit, zAxisUnit,
     xAxisPosition, yAxisPosition, legendPosition, legendLayout, rotateXAxisLabel, rotateYAxisLabel,

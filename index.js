@@ -20,7 +20,7 @@ export default class Chart extends Visualization {
           sharedAxis: false,
           axis: {
             'xAxis': { dimension: 'single', axisType: 'key', minAxisCount: 1, description: 'serial', },
-            'yAxis': { dimension: 'single', axisType: 'aggregator', minAxisCount: 1, description: 'serial', },
+            'yAxis': { dimension: 'multiple', axisType: 'aggregator', minAxisCount: 1, description: 'serial', },
             'category': { dimension: 'multiple', axisType: 'group', },
           },
           parameter: CommonParameter,
@@ -98,11 +98,10 @@ export default class Chart extends Visualization {
       return /** have nothing to display, if aggregator is not specified at all */
     }
 
-    const { rows, key1Names, key2Names, selectors, } = transformer()
+    const { rows, selectors, } = transformer()
 
-    const data = createBubbleChartDataStructure(rows, key1Names, key2Names, selectors)
-    const chartOption = createBubbleChartOption(Highcharts, data, parameter,
-      key1Names, key2Names, selectors)
+    const data = createBubbleChartDataStructure(rows, selectors)
+    const chartOption = createBubbleChartOption(Highcharts, data, parameter)
 
     this.chartInstance = Highcharts.chart(this.getChartElementId(), chartOption)
   }
