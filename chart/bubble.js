@@ -54,8 +54,6 @@ export function createBubbleChartDataStructure(rows, selectors) {
     series.push(s)
   }
 
-  console.log(series)
-
   return series
 }
 
