@@ -1,6 +1,6 @@
 {
   "name": "ultimate-scatter-chart",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The Ultimate Scatter Chart for Apache Zeppelin using <a href src=\"http://www.highcharts.com/\">highcharts</a>",
   "main": "index.js",
   "scripts": {
